@@ -26,9 +26,9 @@ driver = webdriver.Chrome(options=options)
 abiturients = []
 olimpiads = []
 
-#Функция проверки вариантов написания имён с е/ё
+# Функция проверки вариантов написания имён с е/ё
 def generate_word_variants(word):
-    """Генерирует варианты слова с заменой 'Е' на 'Ё' не более одного раза."""
+    # Генерирует варианты слова с заменой 'Е' на 'Ё' не более одного раза
     variants = [word]
     indices = [i for i, letter in enumerate(word) if letter == 'Е']
 
@@ -133,48 +133,50 @@ for index, row in data.iterrows():
     birthmonth = birth[1]
     birthyear = birth[2]
 
-    is_olimp = False
-    print(f"Ищем дипломы для: {full_name} {first_name} {middle_name}, Дата рождения: {'.'.join(birth)}")
+    if any(row[col] >= 75 for col in ['ЕГЭ русский язык', 'ЕГЭ математика', 'ЕГЭ физика', 'ЕГЭ информатика']):
+        is_olimp = False
+        print(f"Ищем дипломы для: {full_name} {first_name} {middle_name}, Дата рождения: {'.'.join(birth)}")
 
-    #сюда проверка на е-ё
-    name_variants = generate_name_variants(' '. join([full_name, first_name, middle_name]))
+        #сюда проверка на е-ё
+        name_variants = generate_name_variants(' '. join([full_name, first_name, middle_name]))
 
-    for name in name_variants:
-        full_name, first_name, middle_name = name.split(" ")
-        for year in range(20, 25):
-            diplomas = search_diplomas(year, full_name.capitalize(), first_name.capitalize(), middle_name.capitalize(), birthday, birthmonth, birthyear)
+        for name in name_variants:
+            print(name)
+            full_name, first_name, middle_name = name.split(" ")
+            for year in range(20, 25):
+                diplomas = search_diplomas(year, full_name.capitalize(), first_name.capitalize(), middle_name.capitalize(), birthday, birthmonth, birthyear)
 
-            if diplomas:
-                for olimp in diplomas:
+                if diplomas:
+                    for olimp in diplomas:
 
-                    #Проверяем каждую олимпиаду на валидность: присутствие в списке олимпиад МАИ, предмет и баллы
-                    num = (re.search(r'№(.*?)\.', olimp)).group(1)
-                    topic = (re.search(r'\(\"(.*?)\"\)', olimp)).group(1)
+                        #Проверяем каждую олимпиаду на валидность: присутствие в списке олимпиад МАИ, предмет и баллы
+                        num = (re.search(r'№(.*?)\.', olimp)).group(1)
+                        topic = (re.search(r'\(\"(.*?)\"\)', olimp)).group(1)
 
-                    bvi[f'Номер в перечне на 20{year - 1}/{year} учебный год'] = bvi[
-                        f'Номер в перечне на 20{year - 1}/{year} учебный год'].astype(str)
+                        bvi[f'Номер в перечне на 20{year - 1}/{year} учебный год'] = bvi[
+                            f'Номер в перечне на 20{year - 1}/{year} учебный год'].astype(str)
 
-                    # Используем contains с игнорированием регистра и проверяем, что значения существуют в bvi
-                    if f'Номер в перечне на 20{year - 1}/{year} учебный год' in bvi.columns and 'Профилирующий предмет' in bvi.columns:
-                        # Найдем индексы, которые соответствуют условиям
-                        index_olimp = bvi.index[
-                            (bvi[f'Номер в перечне на 20{year - 1}/{year} учебный год'] == num) &
-                            (bvi['Профилирующий предмет'].str.contains(topic, case=False, na=False))
-                            ].tolist()
+                        # Используем contains с игнорированием регистра и проверяем, что значения существуют в bvi
+                        if f'Номер в перечне на 20{year - 1}/{year} учебный год' in bvi.columns and 'Профилирующий предмет' in bvi.columns:
+                            # Найдем индексы, которые соответствуют условиям
+                            index_olimp = bvi.index[
+                                (bvi[f'Номер в перечне на 20{year - 1}/{year} учебный год'] == num) &
+                                (bvi['Профилирующий предмет'].str.contains(topic, case=False, na=False))
+                                ].tolist()
 
-                        if index_olimp:
-                            if int(row[f'ЕГЭ {topic}']) >= 75:
-                                is_olimp = True
-                                print(f'За 20{year} записано {olimp}')
-                                # Запись результатов
-                                olimpiads.append({
-                                    'id': id_olimpiada,
-                                    'abiturient_id': id_abiturient,
-                                    'name': olimp,
-                                    'year': int(f'20{year}'),
-                                    'diploma_file': diplomas[olimp]
-                                })
-                                id_olimpiada += 1
+                            if index_olimp:
+                                if int(row[f'ЕГЭ {topic}']) >= 75:
+                                    is_olimp = True
+                                    print(f'За 20{year} записано {olimp}')
+                                    # Запись результатов
+                                    olimpiads.append({
+                                        'id': id_olimpiada,
+                                        'abiturient_id': id_abiturient,
+                                        'name': olimp,
+                                        'year': int(f'20{year}'),
+                                        'diploma_file': diplomas[olimp]
+                                    })
+                                    id_olimpiada += 1
 
 
         if is_olimp:
