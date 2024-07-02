@@ -15,29 +15,30 @@ c = conn.cursor()
 # Создание таблицы, если она еще не существует
 c.execute('''
 CREATE TABLE IF NOT EXISTS Abiturients (
-    id INTEGER,
-    last_name TEXT,
-    first_name TEXT,
-    middle_name TEXT,
-    birth_date DATE,
-    phone_number TEXT,
-    email TEXT,
+    abiturient_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    last_name VARCHAR(50) NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    middle_name VARCHAR(50),
+    birth_date DATE NOT NULL,
+    phone_number VARCHAR(15) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
     ege_russian INTEGER,
     ege_math INTEGER,
     ege_physics INTEGER,
     ege_informatics INTEGER,
-    status TEXT,
+    status VARCHAR(50) CHECK (status IN ('Сомневается', 'Точно поступает', 'Точно не поступает', 'Нет информации')),
     call_result TEXT
 )
 ''')
 
 c.execute('''
 CREATE TABLE IF NOT EXISTS Olimpiads (
-    id INTEGER,
-    abiturient_id INTEGER,
-    name TEXT,
+    olympiads_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    abiturient_id INTEGER NOT NULL,
+    name VARCHAR(100) NOT NULL,
     year INTEGER,
-    diploma_file TEXT
+    diploma_file VARCHAR(255) NOT NULL,
+    FOREIGN KEY (abiturient_id) REFERENCES Abiturients (id) ON DELETE CASCADE
 )
 ''')
 

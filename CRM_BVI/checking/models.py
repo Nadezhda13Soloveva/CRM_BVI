@@ -16,7 +16,7 @@ class Abiturients(models.Model):
     middle_name = models.CharField(max_length=50, null=True, blank=True)
     birth_date = models.DateField()
     phone_number = models.CharField(max_length=15, unique_for_date=True)
-    email = models.EmailField(unique_for_date=True)
+    email = models.CharField(max_length=100, unique_for_date=True)
     ege_russian = models.IntegerField()
     ege_math = models.IntegerField()
     ege_physics = models.IntegerField()
