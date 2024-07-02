@@ -21,7 +21,7 @@ olimpiads = []
 
 # Функция проверки вариантов написания имён с е/ё
 def generate_word_variants(word):
-    """Генерирует варианты слова с заменой 'Е' на 'Ё' не более одного раза."""
+    # Генерирует варианты слова с заменой 'Е' на 'Ё' не более одного раза.
     variants = [word]
     indices = [i for i, letter in enumerate(word) if letter == 'Е']
 
