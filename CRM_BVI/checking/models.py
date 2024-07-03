@@ -32,6 +32,8 @@ class Abiturients(models.Model):
     def __str__(self):
         """Строка для представления объекта MyModelName (например, в административной панели и т.д.)."""
         return f"{self.last_name} {self.first_name} {self.middle_name} {self.birth_date}г.р.,\nномер: {self.phone_number},\n{self.email}\nЕГЭ: {self.ege_russian}|{self.ege_math}|{self.ege_physics}|{self.ege_informatics}|{self.status}\n\n{self.call_result}"
+    def get_absolute_url(self):
+        return reverse('abi-detail-view', args=[str(self.id)])
 
 
 class Olimpiads(models.Model):
@@ -50,3 +52,5 @@ class Olimpiads(models.Model):
     # Methods
     def __str__(self):
         return f"{self.id}\n{self.name}|{self.year}\n{self.diploma_file}"
+    def get_absolute_url(self):
+        return reverse('olimp-detail-view', args=[str(self.id)])
