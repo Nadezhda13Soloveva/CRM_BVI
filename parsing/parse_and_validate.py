@@ -12,7 +12,7 @@ bvi_file = 'bvi_mai.xlsx'
 
 # Загрузка данных из Excel-файла
 data = pd.read_excel(abiturients_file)
-data.iloc[:, :6] = data.iloc[:, :6].fillna('-')
+data.iloc[:, :6] = data.iloc[:, :6].fillna('')
 data.iloc[:, 6:] = data.iloc[:, 6:].fillna(0)
 bvi = pd.read_excel(bvi_file)
 
@@ -28,7 +28,7 @@ olimpiads = []
 
 # Функция проверки вариантов написания имён с е/ё
 def generate_word_variants(word):
-    # Генерирует варианты слова с заменой 'Е' на 'Ё' не более одного раза
+    # Генерирует варианты слова с заменой 'Е' на 'Ё' не более одного раза."""
     variants = [word]
     indices = [i for i, letter in enumerate(word) if letter == 'Е']
 
