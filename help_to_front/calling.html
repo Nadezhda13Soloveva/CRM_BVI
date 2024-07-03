@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylecalling.css">
+
+    <title>Страница с поиском и фильтрами</title>
+    
+    <script>
+        function updateButtonText(dropdown, button) {
+            const items = dropdown.querySelectorAll('input[type="checkbox"]:checked');
+            const values = Array.from(items).map(item => item.nextSibling.textContent.trim());
+            button.textContent = values.join(', ') || 'Выберите...';
+        }
+
+        function setButtonText(button, text) {
+            button.textContent = text;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const statusDropdownItems = document.querySelectorAll('.comment-section .dropdown-content div');
+            const statusButton = document.querySelector('.comment-section .dropdown button');
+            statusDropdownItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    setButtonText(statusButton, item.textContent.trim());
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="navbar">
+        <a>Проверка</a>
+        <a>Обзвон</a>
+    </div>
+    <div class="main-content">
+        <div class="search-box">
+            <input type="text" placeholder="Поиск..." style="width: 80%; padding: 10px; font-size: 16px;">
+        </div>
+        <div class="filters">
+            <div class="dropdown">
+                <button onclick="this.nextElementSibling.style.display = 'block';">Статус ▼</button>
+                <div class="dropdown-content">
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Сомневается</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Точно будет поступать</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Ушел в другой ВУЗ</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Нет информации</label>
+                </div>
+            </div>
+            <div class="dropdown">
+                <button onclick="this.nextElementSibling.style.display = 'block';">Институт ▼</button>
+                <div class="dropdown-content">
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №1</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №2</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №3</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №4</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №5</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №6</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №7</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №8</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №9</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №10</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №11</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №12</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №14</label>
+                </div>
+            </div>
+        </div>
+        <div class="person-info">
+            <div><strong>ФИО:</strong> Иванов Иван Иванович</div>
+            <div><strong>Дата рождения:</strong> 01.01.2000</div>
+            <div><strong>Телефон:</strong> +7 (900) 123-45-67</div>
+            <div><strong>Email:</strong> example@mail.com</div>
+            <div><strong>Результаты ЕГЭ:</strong> Русский язык: 90, Математика: 85, Физика: 80, Информатика: 95</div>
+            <div><strong>Олимпиады:</strong> Олимпиада по математике, Олимпиада по физике</div>
+            <div class="comment-section">
+                <textarea placeholder="Комментарий..."></textarea>
+                <div class="dropdown">
+                    <button>Нет информации ▼</button>
+                    <div class="dropdown-content">
+                        <div>Сомневается</div>
+                        <div>Точно будет поступать</div>
+                        <div>Ушел в другой ВУЗ</div>
+                        <div>Нет информации</div>
+                    </div>
+                </div>
+                <button class="save-comment">Сохранить комментарий</button>
+            </div>
+        </div>
+        <!-- Добавьте другие прямоугольники с информацией о человеке по аналогии -->
+    </div>
+</body>
+</html>
