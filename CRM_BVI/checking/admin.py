@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Abiturients, Olympiads
+from .models import Abiturients, Olimpiads
 
 admin.site.register(Abiturients)
-admin.site.register(Olympiads)
+admin.site.register(Olimpiads)
