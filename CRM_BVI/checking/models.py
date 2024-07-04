@@ -3,10 +3,10 @@ from django.urls import reverse
 
 class Abiturients(models.Model):
     STATUSES = [
-    	('DO', 'сомневается'),
-    	('DY', 'точно поступает'),
-    	('DN', 'точно не поступает'),
-    	('NI', 'нет информации'),
+    	('DO', 'Сомневается'),
+    	('DY', 'Точно будет поступать'),
+    	('DN', 'Ушел в другой ВУЗ'),
+    	('NI', 'Нет информации'),
     ]
     
     # Поля
@@ -31,7 +31,7 @@ class Abiturients(models.Model):
     # Methods
     def __str__(self):
         """Строка для представления объекта MyModelName (например, в административной панели и т.д.)."""
-        return f"{self.last_name} {self.first_name} {self.middle_name} {self.birth_date}г.р.,\nномер: {self.phone_number},\n{self.email}\nЕГЭ: {self.ege_russian}|{self.ege_math}|{self.ege_physics}|{self.ege_informatics}|{self.status}\n\n{self.call_result}"
+        return f"{self.last_name} {self.first_name} {self.middle_name},\nномер: {self.phone_number},\n{self.email}\nЕГЭ: {self.ege_russian}|{self.ege_math}|{self.ege_physics}|{self.ege_informatics}|{self.status}\n\n{self.call_result}" + "{}".format(self.birth_date.strftime('%d.%m.%Y'))
     def get_absolute_url(self):
         return reverse('abi-detail-view', args=[str(self.id)])
 

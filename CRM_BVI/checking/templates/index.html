@@ -1,7 +1,11 @@
 {% extends "base_generic.html" %}
 
+{% block scripts %}
+
+
 {% block content %}
 <div class="container">
+	<form id="form" method="post" action="{% url 'search_abi' %}">
         <div class="form-group">
             <label for="surname">Фамилия</label>
             <input type="text" id="surname" name="surname">
@@ -19,6 +23,7 @@
             <input type="text" id="birthdate" name="birthdate" placeholder="01.01.2000">
         </div>
         <button class="btn">Проверить</button>
+        </form>
     </div>
 {% block request %}{% endblock %}
 {% endblock %}

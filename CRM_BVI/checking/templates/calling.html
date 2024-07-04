@@ -1,16 +1,24 @@
 {% extends "base_generic.html" %}
 
-{% block title %}
-    <title>Страница с поиском и фильтрами</title>
-    <script>
-        function updateButtonText(dropdown, button) {
+{% block title %}<title>Страница с поиском и фильтрами</title>{% endblock %}
+{% block scripts %}
+     <script>
+        function updateButtonText(dropdown, button, defaultText) {
             const items = dropdown.querySelectorAll('input[type="checkbox"]:checked');
             const values = Array.from(items).map(item => item.nextSibling.textContent.trim());
-            button.textContent = values.join(', ') || 'Выберите...';
+            button.textContent = values.join(', ') || defaultText;
         }
 
         function setButtonText(button, text) {
             button.textContent = text;
+        }
+
+        function toggleDropdown(dropdown) {
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            } else {
+                dropdown.style.display = 'block';
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -21,55 +29,84 @@
                     setButtonText(statusButton, item.textContent.trim());
                 });
             });
+
+            const dropdownButtons = document.querySelectorAll('.filters .dropdown > button');
+            dropdownButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const dropdownContent = button.nextElementSibling;
+                    toggleDropdown(dropdownContent);
+                });
+            });
+
+            // Close dropdowns if clicked outside
+            window.addEventListener('click', (event) => {
+                dropdownButtons.forEach(button => {
+                    const dropdownContent = button.nextElementSibling;
+                    if (!button.contains(event.target) && !dropdownContent.contains(event.target)) {
+                        dropdownContent.style.display = 'none';
+                    }
+                });
+            });
+
+            // Initial update for buttons
+            document.querySelectorAll('.dropdown').forEach(dropdown => {
+                const button = dropdown.querySelector('button');
+                const dropdownContent = dropdown.querySelector('.dropdown-content');
+                const defaultText = button.textContent.trim();
+                updateButtonText(dropdownContent, button, defaultText);
+            });
         });
     </script>
 {% endblock %}
 
+
 {% block content %}
-    <div class="main-content">
+   <div class="main-content">
         <div class="search-box">
             <input type="text" placeholder="Поиск..." style="width: 80%; padding: 10px; font-size: 16px;">
         </div>
         <div class="filters">
             <div class="dropdown">
-                <button onclick="this.nextElementSibling.style.display = 'block';">Статус ▼</button>
+                <button>Статус ▼</button>
                 <div class="dropdown-content">
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Сомневается</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Точно будет поступать</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Ушел в другой ВУЗ</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Нет информации</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Статус ▼');"> Сомневается</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Статус ▼');"> Точно будет поступать</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Статус ▼');"> Ушел в другой ВУЗ</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Статус ▼');"> Нет информации</label>
                 </div>
             </div>
             <div class="dropdown">
-                <button onclick="this.nextElementSibling.style.display = 'block';">Институт ▼</button>
+                <button>Институт ▼</button>
                 <div class="dropdown-content">
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №1</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №2</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №3</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №4</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №5</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №6</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №7</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №8</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №9</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №10</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №11</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №12</label>
-                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'));"> Институт №14</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Институт ▼');"> Институт №1</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Институт ▼');"> Институт №2</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Институт ▼');"> Институт №3</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Институт ▼');"> Институт №4</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Институт ▼');"> Институт №5</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Институт ▼');"> Институт №6</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Институт ▼');"> Институт №7</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Институт ▼');"> Институт №8</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Институт ▼');"> Институт №9</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Институт ▼');"> Институт №10</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Институт ▼');"> Институт №11</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Институт ▼');"> Институт №12</label>
+                    <label><input type="checkbox" onclick="updateButtonText(this.closest('.dropdown-content'), this.closest('.dropdown').querySelector('button'), 'Институт ▼');"> Институт №14</label>
                 </div>
             </div>
         </div>
+        {% if calling_list %}
+      	{% for call in calling_list %}
         <div class="person-info">
-            <div><strong>ФИО:</strong> Иванов Иван Иванович</div>
-            <div><strong>Дата рождения:</strong> 01.01.2000</div>
-            <div><strong>Телефон:</strong> +7 (900) 123-45-67</div>
-            <div><strong>Email:</strong> example@mail.com</div>
-            <div><strong>Результаты ЕГЭ:</strong> Русский язык: 90, Математика: 85, Физика: 80, Информатика: 95</div>
+            <div><strong>ФИО:</strong> {{call.last_name}} {{call.first_name}} {{call.middle_name}}</div>
+            <div><strong>Дата рождения:</strong> {{call.birth_date}}</div>
+            <div><strong>Телефон:</strong> {{call.phone_number}}</div>
+            <div><strong>Email:</strong> {{call.email}}</div>
+            <div><strong>Результаты ЕГЭ:</strong> Русский язык: {{call.ege_russian}}, Математика: {{call.ege_math}}, Физика: {{call.ege_physics}}, Информатика: {{call.ege_informatics}}</div>
             <div><strong>Олимпиады:</strong> Олимпиада по математике, Олимпиада по физике</div>
             <div class="comment-section">
                 <textarea placeholder="Комментарий..."></textarea>
                 <div class="dropdown">
-                    <button>Нет информации ▼</button>
+                    <button>{{call.status}} ▼</button>
                     <div class="dropdown-content">
                         <div>Сомневается</div>
                         <div>Точно будет поступать</div>
@@ -80,19 +117,10 @@
                 <button class="save-comment">Сохранить комментарий</button>
             </div>
         </div>
-        <!-- Добавьте другие прямоугольники с информацией о человеке по аналогии -->
-    </div>
-    {% if calling_list %}
-    <ul>
-      {% for call in calling_list %}
-      <li>
-        ({{call.email}})
-      </li>
       {% endfor %}
-
-    </ul>
     {% else %}
-      <p>There are no books in the library.</p>
+      <p>There are no abiturient in the SQL.</p>
     {% endif %}
+    </div>
 {% endblock %}
 

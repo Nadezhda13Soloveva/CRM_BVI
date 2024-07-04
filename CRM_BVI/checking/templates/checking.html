@@ -1,0 +1,25 @@
+{% extends "index.html" %}
+
+{% block request %}
+<div class="person-info">
+        <div><strong>ФИО:</strong> {{name}}</div>
+        <div><strong>Дата рождения:</strong> {{date}}</div>
+        <div><strong>Телефон:</strong> {{phone}}</div>
+        <div><strong>Email:</strong> {{email}}</div>
+        <div><strong>Результаты ЕГЭ:</strong> Русский язык: {{ege_rus}}, Математика: {{ege_m}}, Физика: {{ege_f}}, Информатика: {{ege_inf}}</div>
+        <div><strong>Олимпиады:</strong> Олимпиада по математике, Олимпиада по физике</div>
+        <div class="comment-section">
+            <textarea placeholder="Комментарий...">{{text}}</textarea>
+            <div class="dropdown">
+                <button>{{status}} ▼</button>
+                <div class="dropdown-content">
+                    <div>Сомневается</div>
+                    <div>Точно будет поступать</div>
+                    <div>Ушел в другой ВУЗ</div>
+                    <div>Нет информации</div>
+                </div>
+            </div>
+            <button class="save-comment">Сохранить комментарий</button>
+        </div>
+    </div>
+{% endblock %}
