@@ -36,3 +36,5 @@ class CallList(generic.ListView):
     context_object_name = 'calling_list'
     template_name = 'calling.html'
 
+def index(request):
+    return render(request, 'updata.html')

@@ -10,12 +10,13 @@
 <link rel="stylesheet" href="{% static 'css/stylechecking.css' %}" crossorigin="anonymous"/>
 <link rel="stylesheet" href="{% static 'css/stylecalling.css' %}" crossorigin="anonymous"/>
 <link rel="stylesheet" href="{% static 'css/styleapplychecking.css.css' %}" crossorigin="anonymous"/>
+<link rel="stylesheet" href="{% static 'css/styleupdate.css' %}" crossorigin="anonymous"/>
 </head>
 <body>
     <div class="navbar">
         <a href="{% url 'index' %}">Проверка</a>
         <a href="{% url 'calling' %}">Обзвон</a>
-        <a href="#">Загрузка файла</a>
+        <a href="{% url 'updata' %}">Загрузка файла</a>
     </div>
 
 {% block content %}{% endblock %}

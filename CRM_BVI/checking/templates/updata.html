@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block title %}<title>Форма проверки</title>{% endblock %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        <label for="file_uploads">Выберите файл для обновления базы данных (xlsx, xls)</label>
+        <input
+            type="file"
+            id="file_uploads"
+            name="file_uploads"
+            accept=".xlsx, .xls"
+            multiple />
+        <button>Загрузить</button>
+    </form>
+{% block title %}
