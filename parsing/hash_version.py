@@ -3,7 +3,6 @@ import hashlib
 import requests
 import os
 import pandas as pd
-import json
 
 
 # Путь к Excel-файлу
@@ -132,11 +131,15 @@ for index, row in data.iterrows():
         is_olimp = False
         print(f"Ищем дипломы для: {last_name} {first_name} {middle_name}, Дата рождения: {birth}")
 
-        #сюда проверка на е-ё
-        name_variants = generate_name_variants(' '. join([last_name, first_name, middle_name]))
-
+        # генерация вариантов ФИО с заменой е-ё
+        fio = ' '. join([last_name, first_name, middle_name])
+        name_variants = generate_name_variants(fio)
+        if "Ё" or "ё" in fio:
+            fio = fio.replace("Ё", "Е")
+            fio = fio.replace("ё", "е")
+            name_variants.append(fio)
         for name in name_variants:
-            print(name)
+            print(f'Для варианта:{name}')
             to_hash = ' '.join([name, birth])
 
             while "  " in to_hash:
@@ -149,36 +152,36 @@ for index, row in data.iterrows():
 
                 if diplomas:
                     for diplom in diplomas.split("}"):
-                        print(diplom)
-                        olimp = (re.search(r"oa: '(.*?)', name", diplom)).group(1)
-                        print(olimp)
-                        code_link = (re.search(r"code: (.*?), oa", diplom)).group(1)
-                        num = (re.search(r'№(.*?)\.', olimp)).group(1)
-                        topic = (re.search(r'\(\"(.*?)\"\)', olimp)).group(1)
-                        bvi[f'Номер в перечне на 20{year - 1}/{year} учебный год'] = bvi[
-                            f'Номер в перечне на 20{year - 1}/{year} учебный год'].astype(str)
+                        match = re.search(r"oa: '([^']*)', name", diplom)
+                        if match:
+                            olimp = match.group(1)
+                            code_link = (re.search(r"code: (.*?), oa", diplom)).group(1)
+                            num = (re.search(r'№(.*?)\.', olimp)).group(1)
+                            topic = (re.search(r'\(\"(.*?)\"\)', olimp)).group(1)
+                            bvi[f'Номер в перечне на 20{year - 1}/{year} учебный год'] = bvi[
+                                f'Номер в перечне на 20{year - 1}/{year} учебный год'].astype(str)
 
-                        # Используем contains с игнорированием регистра и проверяем, что значения существуют в bvi
-                        if f'Номер в перечне на 20{year - 1}/{year} учебный год' in bvi.columns and 'Профилирующий предмет' in bvi.columns:
-                            # Найдем индексы, которые соответствуют условиям
-                            index_olimp = bvi.index[
-                                (bvi[f'Номер в перечне на 20{year - 1}/{year} учебный год'] == num) &
-                                (bvi['Профилирующий предмет'].str.contains(topic, case=False, na=False))
-                                ].tolist()
+                            # Используем contains с игнорированием регистра и проверяем, что значения существуют в bvi
+                            if f'Номер в перечне на 20{year - 1}/{year} учебный год' in bvi.columns and 'Профилирующий предмет' in bvi.columns:
+                                # Найдем индексы, которые соответствуют условиям
+                                index_olimp = bvi.index[
+                                    (bvi[f'Номер в перечне на 20{year - 1}/{year} учебный год'] == num) &
+                                    (bvi['Профилирующий предмет'].str.contains(topic, case=False, na=False))
+                                    ].tolist()
 
-                            if index_olimp:
-                                if int(row[f'ЕГЭ {topic}']) >= 75:
-                                    is_olimp = True
-                                    print(f'За 20{year} записано {olimp}')
-                                    # Запись результатов
-                                    olimpiads.append({
-                                        'id': id_olimpiada,
-                                        'abiturient_id': id_abiturient,
-                                        'name': olimp,
-                                        'year': int(f'20{year}'),
-                                        'diploma_file': f'https://diploma.rsr-olymp.ru/files/rsosh-diplomas-static/compiled-storage-20{year}/by-code/{code_link}/color.pdf'
-                                    })
-                                    id_olimpiada += 1
+                                if index_olimp:
+                                    if int(row[f'ЕГЭ {topic}']) >= 75:
+                                        is_olimp = True
+                                        print(f'За 20{year} записано {olimp}')
+                                        # Запись результатов
+                                        olimpiads.append({
+                                            'id': id_olimpiada,
+                                            'abiturient_id': id_abiturient,
+                                            'name': olimp,
+                                            'year': int(f'20{year}'),
+                                            'diploma_file': f'https://diploma.rsr-olymp.ru/files/rsosh-diplomas-static/compiled-storage-20{year}/by-code/{code_link}/color.pdf'
+                                        })
+                                        id_olimpiada += 1
 
         if is_olimp:
             abiturients.append({
