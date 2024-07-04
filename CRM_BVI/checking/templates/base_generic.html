@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма проверки</title>
+    {% block title %}<title>Форма проверки</title>{% endblock %}
 
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/stylechecking.css' %}" crossorigin="anonymous"/>
+<link rel="stylesheet" href="{% static 'css/stylecalling.css' %}" crossorigin="anonymous"/>
 </head>
 <body>
     <div class="navbar">
-        <a href="#">Проверка</a>
-        <a href="#">Обзвон</a>
+        <a href="{% url 'index' %}">Проверка</a>
+        <a href="{% url 'calling' %}">Обзвон</a>
         <a href="#">Загрузка файла</a>
     </div>
 

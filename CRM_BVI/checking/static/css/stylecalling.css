@@ -1,0 +1,133 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+.navbar {
+    display: flex;
+    background-color: #0559ad;
+    overflow: hidden;
+}
+.navbar a {
+    flex: 1;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 0;
+    text-decoration: none;
+    border: 1px solid black; /* Добавление тонкой чёрной границы */
+}
+.navbar a:hover {
+    background-color: #005599;
+}
+.main-content {
+    padding: 20px;
+    text-align: center;
+}
+.search-box {
+    margin-bottom: 20px;
+}
+.filters {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.filters .dropdown {
+    position: relative;
+}
+.filters .dropdown button {
+    background-color: #005599;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.filters .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color:#005599;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    text-align: center;
+}
+.filters .dropdown:hover .dropdown-content,
+.filters .dropdown:focus-within .dropdown-content {
+    display: block;
+}
+.filters .dropdown-content label {
+    display: block;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+}
+.filters .dropdown-content label input {
+    margin-right: 10px;
+}
+.filters .dropdown-content label:hover {
+    background-color: #0888f2;
+}
+.person-info {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+    background-color: rgb(185, 226, 250);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.person-info div {
+    margin-bottom: 10px;
+}
+.comment-section {
+    margin-top: 20px;
+}
+.comment-section textarea {
+    width: 95%;
+    height: 100px;
+    padding: 10px;
+    margin-bottom: 10px;
+    resize: none;
+}
+.comment-section .dropdown {
+    position: relative;
+    display: inline-block;
+}
+.comment-section .dropdown button {
+    background-color: #005599;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.comment-section .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #005599;
+    color: white;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+.comment-section .dropdown:hover .dropdown-content,
+.comment-section .dropdown:focus-within .dropdown-content {
+    display: block;
+}
+.comment-section .dropdown-content div {
+    padding: 10px 15px;
+    cursor: pointer;
+}
+.comment-section .dropdown-content div:hover {
+    background-color: #0888f2;
+}
+.comment-section button.save-comment {
+    background-color: #005599;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
