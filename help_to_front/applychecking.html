@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styleapplychecking.css">
     <title>Отклик на форму проверки</title>
+
+    <script>
+        function updateButtonText(button, text) {
+            button.textContent = text;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropdownItems = document.querySelectorAll('.comment-section .dropdown-content div');
+            const dropdownButton = document.querySelector('.comment-section .dropdown button');
+
+            dropdownItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    updateButtonText(dropdownButton, item.textContent.trim());
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="navbar">
