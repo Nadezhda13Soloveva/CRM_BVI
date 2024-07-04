@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Abiturients, Olimpiads
+from .models import Abiturients, Olimpiads, Directions
 from django.views import generic
 
 def index(request):
