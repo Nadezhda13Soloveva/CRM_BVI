@@ -54,3 +54,31 @@ class Olimpiads(models.Model):
         return f"{self.id}\n{self.name}|{self.year}\n{self.diploma_file}"
     def get_absolute_url(self):
         return reverse('olimp-detail-view', args=[str(self.id)])
+
+class Directions(models.Model):
+    # Поля
+    id = models.IntegerField(primary_key=True)
+    abiturient = models.ForeignKey(Abiturients, on_delete=models.CASCADE)
+    snils = models.CharField(max_length=20)
+    sum_balls = models.IntegerField()
+    sum_balls_ege = models.IntegerField()
+    doc = models.CharField(max_length=20)  # Копия или Оригинал
+    egpu_orig = models.CharField(max_length=20)  # ✓ или пусто
+    dormitory = models.CharField(max_length=20)  # ✓ или пусто
+    direction_1 = models.CharField(max_length=20)
+    direction_2 = models.CharField(max_length=20)
+    direction_3 = models.CharField(max_length=20)
+    direction_4 = models.CharField(max_length=20)
+    direction_5 = models.CharField(max_length=20)
+
+    # Метаданные
+    class Meta:
+        pass
+
+    # Methods
+    def __str__(self):
+        # тут можно вывести больше информации, но пока так
+        return f"{self.id}\nSNILS: {self.snils},\nСумма баллов с ИД: {self.sum_balls}\nНаправления: {self.direction_1}|{self.direction_2}|{self.direction_3}|{self.direction_4}|{self.direction_5}\n\nОбщежитие{self.dormitory}"
+    
+    def get_absolute_url(self):
+        return reverse('direction-detail-view', args=[str(self.id)])
