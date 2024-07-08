@@ -1,26 +1,24 @@
 {% extends "base_generic.html" %}
 
-{% block scripts %}
-
-
 {% block content %}
 <div class="container">
-	<form id="form" method="post" action="{% url 'search_abi' %}">
+	<form method="post" action="">
+	{% csrf_token %}
         <div class="form-group">
             <label for="surname">Фамилия</label>
-            <input type="text" id="surname" name="surname">
+            <input type="text" id="search_first_name" name="search_second_name">
         </div>
         <div class="form-group">
             <label for="name">Имя</label>
-            <input type="text" id="name" name="name">
+            <input type="text" id="search_second_name" name="search_first_name">
         </div>
         <div class="form-group">
             <label for="patronymic">Отчество</label>
-            <input type="text" id="patronymic" name="patronymic">
+            <input type="text" id="search_middle_name" name="search_middle_name">
         </div>
         <div class="form-group">
             <label for="birthdate">Дата рождения</label>
-            <input type="text" id="birthdate" name="birthdate" placeholder="01.01.2000">
+            <input type="text" id="search_birth_date" name="search_birth_date" placeholder="YYY-MM-DD">
         </div>
         <button class="btn">Проверить</button>
         </form>

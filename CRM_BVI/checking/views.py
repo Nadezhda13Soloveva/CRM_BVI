@@ -1,40 +1,65 @@
 from django.shortcuts import render
 from .models import Abiturients, Olimpiads, Directions
+from .forms import SearchAbi
 from django.views import generic
 from django.http import HttpResponseRedirect
 
-def index(request):
-    if request.method == 'POST':
-        search = request.POST.get('checking')
-        abi = Abiturient.objects.filter(first_name__icontains=search) & Abiturient.objects.filter(
-            second_name__icontains=search) & Abiturient.objects.filter(
-            middle_name__icontains=search) & Abiturient.objects.filter(
-            date_birth__icontains=search) 
-        
-        first_name = "AAA"
-    	second_name = "BB"
-    	middle_name = "C"
-    	date_birth = "01.01.2000"
-    	phone_number = "=77777777"
-    	email = "a@g"
-    	ege_rus = 90
-    	ege_m = 100
-    	ege_f = 123
-    	ege_inf = 456
-    	status = "No informations"
-    	text = "This is very hard abi"
-    
-    	return render(request,
-    'checking.html',
-    context={"name": f"{first_name} {second_name} {middle_name}", "date": date_birth, "phone": phone_number, "email": email, "ege_rus": ege_rus, "ege_m": ege_m, "ege_f": ege_f, "ege_inf": ege_inf, "status": status, "text": text}
-    )
-    else:
-    	return render(request, 'index.html')
-    
-class CallList(generic.ListView):
-    model = Abiturients
-    context_object_name = 'calling_list'
-    template_name = 'calling.html'
 
 def index(request):
-    return render(request, 'updata.html')
+    if request.method == "POST":
+        form = SearchAbi(request.POST)
+        if form.is_valid():
+            first_name = form.cleaned_data["search_first_name"]
+            last_name = form.cleaned_data["search_second_name"]
+            middle_name = form.cleaned_data["search_middle_name"]
+            birth_date = form.cleaned_data["search_birth_date"]
+        else:
+            return render(request, "index.html")
+
+        abi = Abiturients.objects.filter(
+            first_name=first_name,
+            last_name=last_name,
+            middle_name=middle_name,
+            birth_date=birth_date,
+        ).first()
+
+        if abi:
+            if abi.call_result==None:
+            	res = str()
+            else:
+            	res = abi.call_result
+            oli_set = abi.olimpiads_set.all()
+            olimpiads = [oli.name for oli in oli_set]
+            olimpiads = " | ".join(olimpiads)
+            return render(
+                request,
+                "checking.html",
+                context={
+                    "name": f"{abi.first_name} {abi.last_name} {abi.middle_name}",
+                    "date": abi.birth_date,
+                    "phone": abi.phone_number,
+                    "email": abi.email,
+                    "ege_rus": abi.ege_russian,
+                    "ege_m": abi.ege_math,
+                    "ege_f": abi.ege_physics,
+                    "ege_inf": abi.ege_informatics,
+                    "status": abi.status,
+                    "text": res,
+                    "set": olimpiads,
+                },
+            )
+        else:
+            return render(request, "index.html")
+    else:
+        return render(request, "index.html")
+
+
+class CallList(generic.ListView):
+    model = Abiturients
+    context_object_name = "calling_list"
+    template_name = "calling.html"
+
+
+def updata(request):
+    return render(request, "updata.html")
+

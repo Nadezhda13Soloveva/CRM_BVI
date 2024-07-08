@@ -2,6 +2,9 @@
 
 {% block title %}<title>Страница с поиском и фильтрами</title>{% endblock %}
 {% block scripts %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/stylecalling.css' %}" crossorigin="anonymous"/>
+     
      <script>
         function updateButtonText(dropdown, button, defaultText) {
             const items = dropdown.querySelectorAll('input[type="checkbox"]:checked');
@@ -102,9 +105,17 @@
             <div><strong>Телефон:</strong> {{call.phone_number}}</div>
             <div><strong>Email:</strong> {{call.email}}</div>
             <div><strong>Результаты ЕГЭ:</strong> Русский язык: {{call.ege_russian}}, Математика: {{call.ege_math}}, Физика: {{call.ege_physics}}, Информатика: {{call.ege_informatics}}</div>
-            <div><strong>Олимпиады:</strong> Олимпиада по математике, Олимпиада по физике</div>
+            <div><strong>Олимпиады:</strong>
+            {% for olim in call.olimpiads_set.all %}
+            {{ olim.name }} | 
+            {% endfor %}
+            </div>
             <div class="comment-section">
+                {% if call.call_result %}
+                <textarea placeholder="Комментарий...">{{ call.call_result}}</textarea>
+                {% else %}
                 <textarea placeholder="Комментарий..."></textarea>
+                {% endif %}
                 <div class="dropdown">
                     <button>{{call.status}} ▼</button>
                     <div class="dropdown-content">

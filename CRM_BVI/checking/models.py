@@ -82,3 +82,5 @@ class Directions(models.Model):
     
     def get_absolute_url(self):
         return reverse('direction-detail-view', args=[str(self.id)])
+        
+

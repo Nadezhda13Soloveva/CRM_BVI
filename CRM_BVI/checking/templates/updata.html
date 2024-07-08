@@ -1,6 +1,11 @@
 {% extends "base_generic.html" %}
 
-{% block title %}<title>Форма проверки</title>{% endblock %}
+{% block title %}<title>Загрузка файла</title>{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styleupdate.css' %}" crossorigin="anonymous"/>
+{% endblock %}
 
 {% block content %}
     <form method="post" enctype="multipart/form-data">
@@ -13,4 +18,4 @@
             multiple />
         <button>Загрузить</button>
     </form>
-{% block title %}
+{% endblock %}
