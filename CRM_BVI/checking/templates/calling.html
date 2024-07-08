@@ -1,6 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block title %}<title>Страница с поиском и фильтрами</title>{% endblock %}
+
 {% block scripts %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/stylecalling.css' %}" crossorigin="anonymous"/>
@@ -60,6 +61,55 @@
             });
         });
     </script>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('form').submit(function(event) {
+        event.preventDefault();  // Предотвращаем стандартное действие формы
+        var formData = $(this).serialize();  // Получаем данные формы
+        $.post($(this).attr('action'), formData, function(response) {
+            console.log('Comment saved successfully!');
+            // Добавьте здесь код для обновления интерфейса, если нужно
+        });
+    });
+});
+</script>
+
+<script>
+
+    
+    function toggleDropdown() {
+        document.querySelector('.dropdown-content').classList.toggle('show');
+        
+    }
+    
+    function sendStatusToServer(status, call_id, call_result) {
+    $.ajax({
+        type: 'POST',
+        url: '',
+        data: {
+            'csrfmiddlewaretoken': '{{ csrf_token }}', // Добавляем CSRF токен к данным
+            'status': '{{ status }}', // Добавьте свои данные здесь
+            'call_id': '{{ call_id }}',
+            'call_result': '{{ call_result }}'
+        },
+        success: function(response) {
+            console.log(response);
+        }
+    });
+}
+
+    function setStatus(status) {
+        document.querySelector('#dropdownBtn').textContent = status;
+        var call_id = document.querySelector('#call_id').value;
+        var call_result = document.querySelector('#call_result').value;
+        var call_id_int = parseInt(call_id);
+        document.querySelector('.dropdown-content').classList.remove('show');
+        sendStatusToServer(status, call_id_int, call_result);
+    }
+</script>
+
 {% endblock %}
 
 
@@ -111,21 +161,26 @@
             {% endfor %}
             </div>
             <div class="comment-section">
+                <form method="post" action="">
+                {% csrf_token %}
                 {% if call.call_result %}
-                <textarea placeholder="Комментарий...">{{ call.call_result}}</textarea>
+                <textarea id="call_result" name="call_result" placeholder="Комментарий...">{{ call.call_result }}</textarea>
                 {% else %}
-                <textarea placeholder="Комментарий..."></textarea>
+                <textarea id="call_result" name="call_result" placeholder="Комментарий..."></textarea>
                 {% endif %}
+                <input type="hidden" id="call_id" name="call_id" value="{{ call.id }}"> 
                 <div class="dropdown">
-                    <button>{{call.status}} ▼</button>
-                    <div class="dropdown-content">
-                        <div>Сомневается</div>
-                        <div>Точно будет поступать</div>
-                        <div>Ушел в другой ВУЗ</div>
-                        <div>Нет информации</div>
-                    </div>
+                    <button id="dropdownBtn" onclick="toggleDropdown()">{{ call.status }} ▼</button>
+    <div class="dropdown-content">
+        <div onclick="setStatus('Сомневается')">Сомневается</div>
+        <div onclick="setStatus('Точно будет поступать')">Точно будет поступать</div>
+        <div onclick="setStatus('Ушел в другой ВУЗ')">Ушел в другой ВУЗ</div>
+        <div onclick="setStatus('Нет информации')">Нет информации</div>
+    </div>
                 </div>
-                <button class="save-comment">Сохранить комментарий</button>
+                <input type="hidden" id="status" name="status" value="{{ call.status }}">
+                <button name="save" class="save-comment" type="submit">Сохранить комментарий</button>
+                </form>
             </div>
         </div>
       {% endfor %}

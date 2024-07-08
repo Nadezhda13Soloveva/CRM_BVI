@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Abiturients, Olimpiads, Directions
-from .forms import SearchAbi
+from .forms import SearchAbi, Comment
 from django.views import generic
 from django.http import HttpResponseRedirect
 
@@ -58,6 +58,20 @@ class CallList(generic.ListView):
     model = Abiturients
     context_object_name = "calling_list"
     template_name = "calling.html"
+    form_class = Comment
+    
+    def post(self, request, *args, **kwargs):
+    	text = request.POST.get("call_result")
+    	call_id = request.POST.get("call_id")
+    	call_status = request.POST.get("status")
+    	print(call_status)
+    	call = Abiturients.objects.get(pk=call_id)
+    	call.call_result = text
+    	call.status = call_status
+    	call.save()
+    	
+    	return self.get(request, *args, **kwargs)
+    	
 
 
 def updata(request):
