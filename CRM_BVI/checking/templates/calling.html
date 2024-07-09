@@ -6,7 +6,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/stylecalling.css' %}" crossorigin="anonymous"/>
      
-     <script>
+    <script>
         function updateButtonText(dropdown, button, defaultText) {
             const items = dropdown.querySelectorAll('input[type="checkbox"]:checked');
             const values = Array.from(items).map(item => item.nextSibling.textContent.trim());
@@ -26,6 +26,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Removed old status dropdown logic
+            /*
             const statusDropdownItems = document.querySelectorAll('.comment-section .dropdown-content div');
             const statusButton = document.querySelector('.comment-section .dropdown button');
             statusDropdownItems.forEach(item => {
@@ -33,7 +35,25 @@
                     setButtonText(statusButton, item.textContent.trim());
                 });
             });
+            */
 
+            // Dropdown for status inside person-info section
+            document.querySelectorAll('.comment-section').forEach(section => {
+                const dropdown = section.querySelector('.dropdown');
+                const statusButton = dropdown.querySelector('button');
+                dropdown.querySelectorAll('.dropdown-content div').forEach(item => {
+                    item.addEventListener('click', () => {
+                        setButtonText(statusButton, item.textContent.trim());
+                        dropdown.querySelector('.dropdown-content').style.display = 'none';
+                    });
+                });
+
+                statusButton.addEventListener('click', () => {
+                    toggleDropdown(dropdown.querySelector('.dropdown-content'));
+                });
+            });
+
+            // Filters dropdowns
             const dropdownButtons = document.querySelectorAll('.filters .dropdown > button');
             dropdownButtons.forEach(button => {
                 button.addEventListener('click', () => {
@@ -52,8 +72,8 @@
                 });
             });
 
-            // Initial update for buttons
-            document.querySelectorAll('.dropdown').forEach(dropdown => {
+            // Initial update for buttons in filters
+            document.querySelectorAll('.filters .dropdown').forEach(dropdown => {
                 const button = dropdown.querySelector('button');
                 const dropdownContent = dropdown.querySelector('.dropdown-content');
                 const defaultText = button.textContent.trim();
