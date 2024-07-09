@@ -1,3 +1,4 @@
+# views.py
 from django.shortcuts import render
 from .models import Abiturients
 from .forms import Abiturients_FilterForm  # Импортируем форму
@@ -12,7 +13,7 @@ def abiturients_filter_list(request):
         options_statuses_ = form.cleaned_data.get('options')
         # Если пользователь выбрал какие-либо параметры, фильтруем абитуриентов по этим параметрам
         if options_statuses_:
-            abiturients = abiturients .filter(status__in=options_statuses_)  # фильтр по полю statuses
+            abiturients = abiturients.filter(status__in=options_statuses_)  # фильтр по полю statuses
 
     # Создание контекста, который будет передан в шаблон
     context = {
@@ -25,3 +26,4 @@ def abiturients_filter_list(request):
 # selected_statuses = ['сомневается']
 # products = Abiturients.objects.all()  # Получаем все продукты
 # print(products.filter(status__in=selected_statuses))  # Фильтруем продукты
+
