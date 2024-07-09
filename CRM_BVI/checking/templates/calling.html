@@ -149,7 +149,7 @@ $(document).ready(function() {
             		<div onclick="handleAction('Нет информации', {{ call.id }})">Нет информации</div>
                     </div>
                 </div>
-                <input type="hidden" id="selected_action_{{ call.id }}" name="selected_action_{{ call.id }}">
+                <input type="hidden" id="selected_action_{{ call.id }}" name="selected_action_{{ call.id }}" value="{{ call.status }}">
                 <input type="hidden" id="call_id" name="call_id" value="{{ call.id }}"> 
                 <button name="save" class="save-comment" type="submit">Сохранить комментарий</button>
                 </form>
