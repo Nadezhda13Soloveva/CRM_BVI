@@ -3,6 +3,7 @@ from .models import Abiturients, Olimpiads, Directions
 from .forms import SearchAbi, Comment
 from django.views import generic
 from django.http import HttpResponseRedirect
+import json
 
 
 def index(request):
@@ -63,8 +64,8 @@ class CallList(generic.ListView):
     def post(self, request, *args, **kwargs):
     	text = request.POST.get("call_result")
     	call_id = request.POST.get("call_id")
-    	call_status = request.POST.get("status")
-    	print(call_status)
+    	call_status = request.POST.get("selected_action_" + str(call_id))
+    	print("POST! call_id =", call_id, "| call_status_"+ str(call_id) + " =", call_status, "| text =", text)
     	call = Abiturients.objects.get(pk=call_id)
     	call.call_result = text
     	call.status = call_status
