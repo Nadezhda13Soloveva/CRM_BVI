@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Фильтр абитуриентов</title>
+</head>
+<body>
+    <h1>Фильтр абитуриентов</h1>
+    <form method="get">
+        <!-- Поле выбора статуса -->
+        <div>
+            <label>Статус</label>
+            <div>
+                <!-- Чекбоксы для статусов -->
+                <input type="checkbox" name="status" value="DO"> точно да<br>
+                <input type="checkbox" name="status" value="DY"> сомневается<br>
+                <input type="checkbox" name="status" value="DN"> точно нет<br>
+                <input type="checkbox" name="status" value="NI"> нет информации<br>
+            </div>
+        </div>
+
+        <!-- Поле выбора направлений -->
+        <div>
+            <label>Ключ направления</label>
+            <div>
+                <!-- Чекбоксы для направлений -->
+                <input type="checkbox" name="direction_key" value="1"> Ключ 1<br>
+                <input type="checkbox" name="direction_key" value="2"> Ключ 2<br>
+                <input type="checkbox" name="direction_key" value="3"> Ключ 3<br>
+            </div>
+        </div>
+
+        <button type="submit">Фильтровать</button>
+    </form>
+</body>
+</html>
