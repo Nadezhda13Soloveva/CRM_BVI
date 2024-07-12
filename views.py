@@ -1,6 +1,9 @@
 from django.shortcuts import render
-from .models import Abiturients, Directions
-from .forms import AbiturientsFilterForm
+from django.db.models import Q  #  для создания сложных запросов с логическими операторами.
+from .models import Abiturients, Olimpiads, Directions
+from .forms import SearchAbi, Comment, FilterForm
+from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 
 inst_direc = {
     1: ['24.03.04', '24.05.07', '25.03.01'],
@@ -15,40 +18,85 @@ inst_direc = {
     11: ['12.03.04', '22.03.01', '22.03.02'],
 }
 
+def index(request):
+    if request.method == "POST":
+        form = SearchAbi(request.POST)
+        if form.is_valid():
+            first_name = form.cleaned_data["search_first_name"]
+            last_name = form.cleaned_data["search_second_name"]
+            middle_name = form.cleaned_data["search_middle_name"]
+            birth_date = form.cleaned_data["search_birth_date"]
+        else:
+            return render(request, "index.html")
 
-def filter_abiturients(request):
-    if request.method == 'GET':
-        form = AbiturientsFilterForm(request.GET)  # Создаем экземпляр формы и передаем данные из запроса GET.
-        # Если данных нет, то передаем None.
-        abiturients = Abiturients.objects.all()  # получение всех объектов Abiturients
+        abi = Abiturients.objects.filter(
+            first_name=first_name,
+            last_name=last_name,
+            middle_name=middle_name,
+            birth_date=birth_date,
+        ).first()
 
-        if form.is_valid():  # проверка валидности формы:
-            status = form.cleaned_data.get('status')
-            direction_keys = form.cleaned_data.get('direction_key')
-            #  содержат выбранные значения статусов и ключей направлений соотв
+        if abi:
+            if abi.call_result==None:
+            	res = str()
+            else:
+            	res = abi.call_result
+            oli_set = abi.olimpiads_set.all()
+            olimpiads = [oli.name for oli in oli_set]
+            olimpiads = " | ".join(olimpiads)
+            return render(
+                request,
+                "checking.html",
+                context={
+                    "name": f"{abi.first_name} {abi.last_name} {abi.middle_name}",
+                    "date": abi.birth_date,
+                    "phone": abi.phone_number,
+                    "email": abi.email,
+                    "ege_rus": abi.ege_russian,
+                    "ege_m": abi.ege_math,
+                    "ege_f": abi.ege_physics,
+                    "ege_inf": abi.ege_informatics,
+                    "status": abi.status,
+                    "text": res,
+                    "set": olimpiads,
+                },
+            )
+        else:
+            return render(request, "index.html")
+    else:
+        return render(request, "index.html")
 
-            if status:  # если пользователь выбрал статусы, фильтруем абитуриентов по этим статусам
-                abiturients = abiturients.filter(status__in=status)
 
-            if direction_keys:  # если пользователь выбрал ключи направлений
-                direction_codes = [] # Создаем список direction_codes, который содержит
-                # все направления для выбранных ключей.
-                for key in direction_keys:
-                    direction_codes.extend(inst_direc[int(key)])
-                # Фильтруем абитуриентов по каждому из полей направлений (direction_1, direction_2, и т.д.),
-                # используя объединение (|) запросов для получения абитуриентов, которые имеют хотя бы одно из
-                # выбранных направлений.
-                abiturients = abiturients.filter(directions__direction_1__in=direction_codes) | \
-                              abiturients.filter(directions__direction_2__in=direction_codes) | \
-                              abiturients.filter(directions__direction_3__in=direction_codes) | \
-                              abiturients.filter(directions__direction_4__in=direction_codes) | \
-                              abiturients.filter(directions__direction_5__in=direction_codes)
-                # abiturients = abiturients.filter(
-                #     models.Q(directions__direction_1__in=direction_codes) |
-                #     models.Q(directions__direction_2__in=direction_codes) |
-                #     models.Q(directions__direction_3__in=direction_codes) |
-                #     models.Q(directions__direction_4__in=direction_codes) |
-                #     models.Q(directions__direction_5__in=direction_codes)
-                # ).distinct()
-                # Метод distinct() используется для устранения дубликатов в результате объединения запросов
-    return render(request, 'abiturients_list.html', {'form': form, 'abiturients': abiturients})
+def filter_view(request):
+    form = FilterForm(request.POST or None)  # Создаем объект формы FilterForm. Если метод запроса POST, форма
+    # заполняется данными из запроса, в противном случае форма остается пустой.
+    abiturients = Abiturients.objects.all()  # Получение всех абитуриентов
+
+    if form.is_valid():  # проверка формы на валидность
+        # Извлечение данных из формы
+        status = form.cleaned_data.get('status')
+        directions = form.cleaned_data.get('directions')
+
+        if status:  # фильтрация абитуриентов по статусу
+            abiturients = abiturients.filter(status__in=status)
+
+        if directions:  # фильтрация абитуриентов по направлениям
+            q_objects = Q()  #  пустой объект Q, который будет использоваться для создания условий фильтрации по направлениям.
+            for direction in directions:  # проходит по институтам
+                direction_ids = inst_direc.get(int(direction))  # извлечения списка направлений
+                if direction_ids:  # проверка, что не NONE
+                    q_objects |= (Q(direction_1__in=direction_ids) |
+                                  Q(direction_2__in=direction_ids) |
+                                  Q(direction_3__in=direction_ids) |
+                                  Q(direction_4__in=direction_ids) |
+                                  Q(direction_5__in=direction_ids))
+
+            abiturient_ids = Directions.objects.filter(q_objects).values_list('abiturient_id', flat=True)  # вывод abiturient_id
+            abiturients = abiturients.filter(id__in=abiturient_ids)  # Фильтрация абитуриентов по их идентификаторам
+    return render(request, 'calling.html', {'form': form, 'abiturients': abiturients})
+
+
+
+def updata(request):
+    return render(request, "updata.html")
+
